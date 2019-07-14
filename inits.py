@@ -4,7 +4,7 @@
 
 import telebot
 
-tel_token = "<###THE BOTS TOKEN###>" #TEST token
+tel_token = "<###THE BOTS TOKEN###>" #Telegram token (Which is received from Bot father)
 
 feedBack_target_chat = <CHAT_ID> #The chat where all the FeedBacks will be forwarded, Make sure the bot has access to this chat
 
