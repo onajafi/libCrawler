@@ -11,7 +11,7 @@ last_user_msg_time = {}
 
 #This function will check if a user is
 # using the proper amount of load on the server
-## returns "SPAM" if it's a spam (not implemented)
+## returns:
 ## "IGNORE" if there is no need to take any action
 ## "IN_PROC" tell that where in a process right now
 ## "OK" if everything is cool

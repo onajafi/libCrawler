@@ -2,7 +2,9 @@
 tmp/*
 *.log
 *.png
+*.txt
 
 *.pyc
+
 
 
