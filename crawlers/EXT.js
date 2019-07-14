@@ -10,7 +10,7 @@ casper.echo('The inputs:');
 casper.echo(casper.cli.args[0]);
 
 //reading the input file:
-var file_input = fs.read('../tmp/'+casper.cli.args[0]);
+var file_input = fs.read('tmp/'+casper.cli.args[0]);
 var parsed_input_JSON = JSON.parse(file_input);
 
 
@@ -60,7 +60,7 @@ casper.then(function() {
     var title = this.getTitle();
     this.echo('First Page: ' + title);
     this.echo("_________________________________________________");
-    this.capture('navigation.png');
+    // this.capture('navigation.png');
     if(title.search(/کتابخانه مرکزی دانشگاه صنعتی شریف/) != -1){
         output_for_JSON["ENTRY_STATE"] = "GOOD";
     }
