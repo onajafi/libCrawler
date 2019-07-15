@@ -37,4 +37,5 @@ in_the_middle_of_a_process = "بات در حال پردازش دستور قبل 
 
 we_cant_do_it_now = "در حال حاضر، انجام عملیات امکان پذیر نمی‌باشد."
 
-
+what_question_mark_v1 = "هان؟"
+what_question_mark_v2 = "چی؟"

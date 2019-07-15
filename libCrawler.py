@@ -15,6 +15,17 @@ def send_welcome(message):
     if check == "OK":
         bot.send_message(message.chat.id,MSGs.greetings,reply_markup = MSGs.enter_userpass_markup,parse_mode='HTML')
         trafficController.drop_check(message.chat.id)
+        users.add_user(message)
+
+
+
+@bot.message_handler(content_types=['text'])
+@Error_Handle.secure_from_exception
+def text_MSG(message):
+    check = trafficController.check_spam(message.chat.id)
+    if check == "OK":
+        process.process_user_MSG(message)
+        trafficController.drop_check(message.chat.id)
 
 @bot.callback_query_handler(func=lambda call: True)
 @Error_Handle.secure_from_exception
@@ -26,7 +37,7 @@ def test_callback(call):
 
     check = trafficController.check_spam(call.from_user.id)
     if check == "OK":
-        response = process.process_user_call(call)
+        process.process_user_call(call)
         trafficController.drop_check(call.from_user.id)
 
 
