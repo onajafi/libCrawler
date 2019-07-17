@@ -79,6 +79,15 @@ casper.then(function() {
 })
     .thenClick('input.button')
     .thenOpen("http://library.sharif.ir/parvan/borrowed.do?action=list&listViewStatus=active")
+    .then(function() {
+        if(this.exists(".page-header > h1:nth-child(1)") &&
+            this.getElementInfo(".page-header > h1:nth-child(1)")["text"].search(/فهرست امانت های من/) != -1
+        ){
+            output_for_JSON["PASSWORD_STATE"] = "CORRECT";
+        } else {
+            output_for_JSON["PASSWORD_STATE"] = "WRONG";
+        }
+    })
     .then(function(){
         output_for_JSON["table"] = [];
         for(var i=0;;i++){

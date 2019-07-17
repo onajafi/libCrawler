@@ -3,6 +3,7 @@ tmp/*
 *.log
 *.png
 *.txt
+*.sqlite
 
 *.pyc
 

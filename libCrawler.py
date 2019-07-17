@@ -9,18 +9,32 @@ import MSGs, users, Error_Handle
 
 
 @bot.message_handler(commands=['start'])
-@Error_Handle.secure_from_exception
+@Error_Handle.secure_from_exception_MESSAGE
 def send_welcome(message):
     check = trafficController.check_spam(message.chat.id)
     if check == "OK":
         bot.send_message(message.chat.id,MSGs.greetings,reply_markup = MSGs.enter_userpass_markup,parse_mode='HTML')
-        trafficController.drop_check(message.chat.id)
         users.add_user(message)
+        trafficController.drop_check(message.chat.id)
 
+@bot.message_handler(commands=['status'])
+@Error_Handle.secure_from_exception_MESSAGE
+def send_welcome(message):
+    check = trafficController.check_spam(message.chat.id)
+    if check == "OK":
+        process.check_account_status(message.chat.id)
+        trafficController.drop_check(message.chat.id)
 
+@bot.message_handler(commands=['renew'])
+@Error_Handle.secure_from_exception_MESSAGE
+def send_welcome(message):
+    check = trafficController.check_spam(message.chat.id)
+    if check == "OK":
+
+        trafficController.drop_check(message.chat.id)
 
 @bot.message_handler(content_types=['text'])
-@Error_Handle.secure_from_exception
+@Error_Handle.secure_from_exception_MESSAGE
 def text_MSG(message):
     check = trafficController.check_spam(message.chat.id)
     if check == "OK":
@@ -28,7 +42,7 @@ def text_MSG(message):
         trafficController.drop_check(message.chat.id)
 
 @bot.callback_query_handler(func=lambda call: True)
-@Error_Handle.secure_from_exception
+@Error_Handle.secure_from_exception_CALL
 def test_callback(call):
     bot.answer_callback_query(call.id)
 

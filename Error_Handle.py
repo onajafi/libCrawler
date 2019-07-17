@@ -10,7 +10,7 @@ f.close()
 
 def log_error(title):
     try:
-        f = open('../error.txt', 'a')
+        f = open('error.txt', 'a')
         f.write("\n\n\n" + str(title) + "-------------------\n")
         traceback.print_exc(file=f)
         f.close()
@@ -35,6 +35,26 @@ def secure_from_exception(FUNC):
             FUNC(input_userID)
         except:
             bot.send_message(input_userID,MSGs.we_cant_do_it_now)
+            log_error("ERROR: " + FUNC.__name__)
+            return
+    return output_FUNC
+
+def secure_from_exception_MESSAGE(FUNC):
+    def output_FUNC(input_message):
+        try:
+            FUNC(input_message)
+        except:
+            bot.send_message(input_message.chat.id,MSGs.we_cant_do_it_now)
+            log_error("ERROR: " + FUNC.__name__)
+            return
+    return output_FUNC
+
+def secure_from_exception_CALL(FUNC):
+    def output_FUNC(input_call):
+        try:
+            FUNC(input_call)
+        except:
+            bot.send_message(input_call.from_user.id,MSGs.we_cant_do_it_now)
             log_error("ERROR: " + FUNC.__name__)
             return
     return output_FUNC
