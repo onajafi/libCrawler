@@ -20,26 +20,24 @@ var date_regex = /[0-9]{4}[/][0-9]{1,2}[/][0-9]{1,2}/;
 
 
 //Functions
-
+var exted_success;
 //This function enters the page and clicks the button
 // to extend the return time of the reserved book.
 function extendTime(ref,link) {
 
-    temp_output = true;
-
-    casper.thenOpen(link)
-        .then(function() {
-            casper.capture('navigation.png');
-        })
+    ref.thenOpen(link)
+        // .then(function() {
+        //     //casper.capture('navigation.png');
+        // })
         .thenClick('input.btn.btn-primary')
-        .then(function() {
-            if(this.exists('div#errorMessages.error')){
-                this.echo("Error in extending the time!!!");
-                temp_output = false;
-            }
-        });
+        // .then(
+        //     function() {
+        //         if(this.exists('div#errorMessages.error')){
+        //             this.echo("Error in extending the time!!!");
+        //         }
+        //     }
+        // );
 
-    return temp_output;
 }
 
 function cleanText(rawText){
@@ -50,7 +48,7 @@ function cleanText(rawText){
 
 function extract_json_file(){
     var output_filename = 'output_EXT_'+parsed_input_JSON.chat_id + '.json';
-    fs.write('../tmp/'+output_filename, JSON.stringify(output_for_JSON), 'w');
+    fs.write('tmp/'+output_filename, JSON.stringify(output_for_JSON), 'w');
 }
 //Main
 
@@ -108,11 +106,16 @@ casper.then(function() {
                 // tmpJSONrow["number"] = cleanText(this.getElementInfo(rowSelector + "> td:nth-child(9)")["text"]);
                 tmpJSONrow["status"] = cleanText(this.getElementInfo(rowSelector + "> td:nth-child(10)")["text"]);
 
-                //Click the link
+                //Renew if possible
                 if(parsed_input_JSON["extend"]) {
-                    extendResult = extendTime(this,
-                        "http://library.sharif.ir" + this.getElementInfo(rowSelector + "> td:nth-child(2) > a")["attributes"]["href"]
-                    );
+                    extendTime(this,"http://library.sharif.ir" + this.getElementInfo(rowSelector + "> td:nth-child(2) > a")["attributes"]["href"]);
+                    if(tmpJSONrow["returnDate"] !=
+                        cleanText(this.getElementInfo(rowSelector + "> td:nth-child(5)")["text"].match(date_regex)[0])){
+                        tmpJSONrow["extended_successfully"] = true;
+                        tmpJSONrow["returnDate"] = cleanText(this.getElementInfo(rowSelector + "> td:nth-child(5)")["text"].match(date_regex)[0]);
+                    } else {
+                        tmpJSONrow["extended_successfully"] = false;
+                    }
                 } else {
                     tmpJSONrow["extended_successfully"] = false;
                 }

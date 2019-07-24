@@ -5,6 +5,7 @@ import os, subprocess, signal
 from random import randrange
 
 import dataBase
+import inits
 from users import user_book
 from inits import bot
 import MSGs
@@ -83,11 +84,11 @@ def check_account_status(user_ID,quiet=False):
     data = None
     data_output_file_name = 'output_EXT_' + str(user_ID) + '.json'
     # --Reading the results--
-    with open('../tmp/' + data_output_file_name) as f:
+    with open('tmp/' + data_output_file_name) as f:
         data = json.load(f)
 
-    # os.remove('../tmp/' + data_output_file_name)
-    # os.remove('../tmp/' + input_file_name)
+    # os.remove('tmp/' + data_output_file_name)
+    # os.remove('tmp/' + input_file_name)
 
     if "ENTRY_STATE" not in data:
         bot.send_message(user_ID,MSGs.error_in_getting_data)
@@ -105,7 +106,7 @@ def check_account_status(user_ID,quiet=False):
     for elem in data["table"]:
         temp_MSG = str(elem["rowNum"] + 1) + ".\n"
         temp_MSG += "عنوان کتاب:\n" + str(elem["title"]) + "\n"
-        temp_MSG += "تاریخ موعد بازگشت:\n" + str(elem["returnDate"]) + "\n"
+        temp_MSG += "موعد بازگشت:\n" + str(elem["returnDate"]) + "\n"
         temp_MSG += "وضعیت:\n" + str(elem["status"]) + "\n"
         main_MSG += temp_MSG
         main_MSG += "-------------\n"
@@ -114,5 +115,99 @@ def check_account_status(user_ID,quiet=False):
 
     user_book[user_ID]["state"] = "DONE"
 
+# This function renews the book...
+def renew_account_books(user_ID, quiet=False):
+    if(user_book[user_ID]["pass"] == None):
+        bot.send_message(user_ID, MSGs.please_give_user_pass, reply_markup=MSGs.enter_userpass_markup)
+        return
+    if not quiet:
+        bot.send_message(user_ID, MSGs.tryin_to_renew)
 
+    input_data = {"pass": user_book[user_ID]["pass"],
+                  "user": user_book[user_ID]["user"],
+                  "chat_id": user_ID,
+                  "extend":True}
+
+    input_file_name = 'input_EXT_' + str(user_ID) + '.json'
+    with open('tmp/' + input_file_name, 'w') as outfile:
+        json.dump(input_data, outfile)
+
+    try:
+        p = subprocess.Popen(['casperjs',  'crawlers/EXT.js', input_file_name])
+        print p.poll()
+        for i in range(120):
+            if (p.poll() is None):
+                time.sleep(1)
+    except:
+        p.send_signal(signal.SIGINT)
+        Error_Handle.log_error("SCRIPT ERROR: check_account_status")
+        print "Script KILLED"
+        return
+
+    if (p.poll() is None):
+        p.send_signal(signal.SIGINT)
+        print "CTRL+C The script didn't get completely finished"
+        bot.send_message(user_ID,MSGs.error_in_getting_data)
+        return
+    print "--DONE--"
+
+    data = None
+    data_output_file_name = 'output_EXT_' + str(user_ID) + '.json'
+    # --Reading the results--
+    with open('tmp/' + data_output_file_name) as f:
+        data = json.load(f)
+
+    # os.remove('tmp/' + data_output_file_name)
+    # os.remove('tmp/' + input_file_name)
+
+    if "ENTRY_STATE" not in data:
+        bot.send_message(user_ID,MSGs.error_in_getting_data)
+        return
+    if data["ENTRY_STATE"] != "GOOD":
+        bot.send_message(user_ID, MSGs.error_in_getting_data)
+        return
+
+    if data["PASSWORD_STATE"] == "WRONG":
+        bot.send_message(user_ID, MSGs.your_password_is_wrong, reply_markup=MSGs.enter_userpass_markup)
+        return
+
+    win_count = 0
+
+    main_MSG = ""
+    for elem in data["table"]:
+        temp_MSG = str(elem["rowNum"] + 1) + ".\n"
+        temp_MSG += "عنوان کتاب:\n" + str(elem["title"]) + "\n"
+        temp_MSG += "موعد بازگشت:\n" + str(elem["returnDate"]) + "\n"
+        temp_MSG += "وضعیت:\n" + str(elem["status"]) + "\n"
+        main_MSG += temp_MSG
+        main_MSG += "-------------\n"
+        if(elem["extended_successfully"]):
+            print "extended_successfully", elem["extended_successfully"]
+            win_count += 1
+
+    if ((not quiet) or (win_count > 0)):
+        bot.send_message(user_ID, "تعداد کتاب‌های تمدید شده: " + str(win_count))
+        bot.send_message(user_ID,main_MSG)
+
+    user_book[user_ID]["state"] = "DONE"
+
+def renew_all_users():
+    count_win = 0
+    count_loose = 0
+    for user_ID in user_book.keys():
+        try:
+            if(user_book[user_ID]["user"] and user_book[user_ID]["pass"]):
+                renew_account_books(user_ID)
+                count_win+=1
+            else:
+                count_loose+=1
+        except:
+            bot.send_message(user_ID, MSGs.cant_auto_renew)
+            Error_Handle.log_error("ERROR: " + "renew_all_users()::for")
+            return
+    bot.send_message(inits.feedBack_target_chat,
+                     "Passed: " + str(count_win) + '\n'
+                     "Failed: " + str(count_loose) + '\n'
+                     "Total: " + str(count_win + count_loose)
+                     )
 

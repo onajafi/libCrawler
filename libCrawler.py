@@ -1,5 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
+import datetime
+
 import process
 from inits import bot
 import trafficController
@@ -7,6 +9,9 @@ import time, threading
 import MSGs, users, Error_Handle
 
 
+#TODO add help command
+#TODO add feedback
+#TODO add the reply_markup_button
 
 @bot.message_handler(commands=['start'])
 @Error_Handle.secure_from_exception_MESSAGE
@@ -30,7 +35,7 @@ def send_welcome(message):
 def send_welcome(message):
     check = trafficController.check_spam(message.chat.id)
     if check == "OK":
-
+        process.renew_account_books(message.chat.id)
         trafficController.drop_check(message.chat.id)
 
 @bot.message_handler(content_types=['text'])
@@ -69,8 +74,29 @@ def MAIN_THR():
             pass
         time.sleep(2)
 
+def RENEW_THR():
+    global RUN_THREAD
+    while(RUN_THREAD):
+        try:
+            now = datetime.datetime.utcnow() + datetime.timedelta(hours=3, minutes=30)
+            ALARM_TIME = now + datetime.timedelta(days=1)
+            ALARM_TIME = ALARM_TIME.replace(year=ALARM_TIME.year,
+                                            month=ALARM_TIME.month,
+                                            day=ALARM_TIME.day,
+                                            hour=6, minute=20, second=50)
+            wait_time = (ALARM_TIME - now).total_seconds() % (24 * 60 * 60)
+            print "wait_time: ", wait_time
+            # print (ALARM_TIME - now).total_seconds()
+            time.sleep(wait_time)
+            process.renew_all_users()
+
+        except:
+            pass
+        time.sleep(2)
 
 main_thread = threading.Thread(target = MAIN_THR)
+renew_thread = threading.Thread(target = RENEW_THR)
 
 main_thread.start()
+renew_thread.start()
 
