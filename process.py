@@ -211,3 +211,8 @@ def renew_all_users():
                      "Total: " + str(count_win + count_loose)
                      )
 
+
+
+
+if not os.path.exists('tmp'):
+    os.makedirs('tmp')
