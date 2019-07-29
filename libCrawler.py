@@ -7,10 +7,11 @@ from inits import bot
 import trafficController
 import time, threading
 import MSGs, users, Error_Handle
+from emoji import emojize
 
 
-#TODO add help command
 #TODO add feedback
+#TODO add respond
 #TODO add the reply_markup_button
 
 @bot.message_handler(commands=['start'])
@@ -46,12 +47,29 @@ def send_welcome(message):
         process.renew_account_books(message.chat.id)
         trafficController.drop_check(message.chat.id)
 
-@bot.message_handler(commands=['help'],regexp=None)
+@bot.message_handler(regexp="^"+emojize('لیست دستورات:ledger:', use_aliases=True)+"$")
+@bot.message_handler(commands=['help'])
 @Error_Handle.secure_from_exception_MESSAGE
 def send_welcome(message):
     check = trafficController.check_spam(message.chat.id)
     if check == "OK":
         process.send_help_MSG(message.chat.id)
+        trafficController.drop_check(message.chat.id)
+
+@bot.message_handler(commands=['feedback'])
+@Error_Handle.secure_from_exception_MESSAGE
+def send_welcome(message):
+    check = trafficController.check_spam(message.chat.id)
+    if check == "OK":
+        process.get_feedback(message.chat.id)
+        trafficController.drop_check(message.chat.id)
+
+@bot.message_handler(commands=['cancel'])
+@Error_Handle.secure_from_exception_MESSAGE
+def send_welcome(message):
+    check = trafficController.check_spam(message.chat.id)
+    if check == "OK":
+        process.cancel_action(message.chat.id)
         trafficController.drop_check(message.chat.id)
 
 @bot.message_handler(content_types=['text'])

@@ -67,4 +67,10 @@ help_message = """
 /enter_user_pass
 """
 
+leave_your_message = "لطفا نظر ویا انتقادتان را ارسال کنید:\n" \
+                     "(برای لغو عملیات از دستور /cancel استفاده کنید)"
+
+feedBack_sent = "پیامتان ارسال شد :)"
+
+canceled_successfully = "عملیات لغو شد"
 

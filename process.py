@@ -7,7 +7,7 @@ from random import randrange
 import dataBase
 import inits
 from users import user_book
-from inits import bot
+from inits import bot, feedBack_target_chat
 import MSGs
 import Error_Handle
 
@@ -39,6 +39,12 @@ def process_user_MSG(message):
             user_book[user_ID]["user"] = None
             user_book[user_ID]["pass"] = None
 
+    elif(user_book[user_ID]["state"] == "get_feedback"):
+        bot.forward_message(feedBack_target_chat,user_ID,message.message_id)
+        bot.send_message(feedBack_target_chat,"The users ID is:")
+        bot.send_message(feedBack_target_chat,str(user_ID))
+        bot.send_message(user_ID,MSGs.feedBack_sent)
+        user_book[user_ID]["state"] = None
 
     else:
         if(randrange(2) == 0):
@@ -224,3 +230,15 @@ def get_userpass(user_ID):
 
 def send_help_MSG(user_ID):
     bot.send_message(user_ID, MSGs.help_message)
+
+def get_feedback(user_ID):
+    user_book[user_ID]["state"] = "get_feedback"
+    bot.send_message(user_ID, MSGs.leave_your_message)
+
+def cancel_action(user_ID):
+    user_book[user_ID]["state"] = None
+    bot.send_message(user_ID, MSGs.canceled_successfully)
+
+
+
+
