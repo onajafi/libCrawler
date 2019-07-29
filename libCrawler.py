@@ -3,15 +3,13 @@
 import datetime
 
 import process
-from inits import bot
+from inits import bot,feedBack_target_chat
 import trafficController
 import time, threading
 import MSGs, users, Error_Handle
 from emoji import emojize
 
 
-#TODO add feedback
-#TODO add respond
 #TODO add the reply_markup_button
 
 @bot.message_handler(commands=['start'])
@@ -70,6 +68,17 @@ def send_welcome(message):
     check = trafficController.check_spam(message.chat.id)
     if check == "OK":
         process.cancel_action(message.chat.id)
+        trafficController.drop_check(message.chat.id)
+
+# For the admin (feedBack_target_chat)
+@bot.message_handler(commands=['respond'])
+@Error_Handle.secure_from_exception_MESSAGE
+def send_welcome(message):
+    if(message.chat.id != feedBack_target_chat):
+        return
+    check = trafficController.check_spam(message.chat.id)
+    if check == "OK":
+        process.respond_to_user_ID(message.chat.id)
         trafficController.drop_check(message.chat.id)
 
 @bot.message_handler(content_types=['text'])

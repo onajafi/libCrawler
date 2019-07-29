@@ -11,6 +11,9 @@ from inits import bot, feedBack_target_chat
 import MSGs
 import Error_Handle
 
+dest_Chat_ID = -1
+
+@Error_Handle.secure_from_exception_CALL
 def process_user_call(call):
     user_ID = call.from_user.id
     call_TXT = call.data
@@ -20,7 +23,9 @@ def process_user_call(call):
     else:
         bot.send_message(user_ID, "خطا در دریافت دستور...")
 
+@Error_Handle.secure_from_exception_MESSAGE
 def process_user_MSG(message):
+    global dest_Chat_ID
     user_ID = message.chat.id
     msg_TXT = message.text
     if(user_book[user_ID]["state"] == "get_USER"):
@@ -45,6 +50,16 @@ def process_user_MSG(message):
         bot.send_message(feedBack_target_chat,str(user_ID))
         bot.send_message(user_ID,MSGs.feedBack_sent)
         user_book[user_ID]["state"] = None
+
+    elif(user_book[user_ID]["state"] == "admin_respond_get_chat_ID"):
+        dest_Chat_ID = int(message.text)
+        bot.send_message(feedBack_target_chat,"Leave response:")
+        user_book[user_ID]["state"] = "admin_respond_entering_MSG"
+
+    elif(user_book[user_ID]["state"] == "admin_respond_entering_MSG"):
+        bot.send_message(dest_Chat_ID,message.text)
+        bot.send_message(feedBack_target_chat,"Sent :)")
+        dest_Chat_ID = -1
 
     else:
         if(randrange(2) == 0):
@@ -239,6 +254,8 @@ def cancel_action(user_ID):
     user_book[user_ID]["state"] = None
     bot.send_message(user_ID, MSGs.canceled_successfully)
 
-
+def respond_to_user_ID(user_ID):
+    user_book[user_ID]["state"] = "admin_respond_get_chat_ID"
+    bot.send_message(user_ID, "leave the destination chat ID:")
 
 
