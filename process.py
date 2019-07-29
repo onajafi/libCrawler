@@ -35,7 +35,9 @@ def process_user_MSG(message):
         if (user_book[user_ID]["state"] == "DONE"):#Check if the user pass is OK and then bring in the database
             dataBase._update_UserPass(user_ID,user_book[user_ID]["user"],user_book[user_ID]["pass"])
             bot.send_message(user_ID, MSGs.your_good_to_go)
-
+        else:
+            user_book[user_ID]["user"] = None
+            user_book[user_ID]["pass"] = None
 
 
     else:
@@ -197,7 +199,7 @@ def renew_all_users():
     for user_ID in user_book.keys():
         try:
             if(user_book[user_ID]["user"] and user_book[user_ID]["pass"]):
-                renew_account_books(user_ID)
+                renew_account_books(user_ID)# Add true for quiet here
                 count_win+=1
             else:
                 count_loose+=1
@@ -213,6 +215,12 @@ def renew_all_users():
 
 
 
-
 if not os.path.exists('tmp'):
     os.makedirs('tmp')
+
+def get_userpass(user_ID):
+    user_book[user_ID]["state"] = "get_USER"
+    bot.send_message(user_ID, MSGs.give_user)
+
+def send_help_MSG(user_ID):
+    bot.send_message(user_ID, MSGs.help_message)

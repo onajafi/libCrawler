@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import traceback
+
+import trafficController
 from inits import bot
 import MSGs
 
@@ -35,6 +37,7 @@ def secure_from_exception(FUNC):
             FUNC(input_userID)
         except:
             bot.send_message(input_userID,MSGs.we_cant_do_it_now)
+            trafficController.drop_check(input_userID)
             log_error("ERROR: " + FUNC.__name__)
             return
     return output_FUNC
@@ -45,6 +48,7 @@ def secure_from_exception_MESSAGE(FUNC):
             FUNC(input_message)
         except:
             bot.send_message(input_message.chat.id,MSGs.we_cant_do_it_now)
+            trafficController.drop_check(input_message.chat.id)
             log_error("ERROR: " + FUNC.__name__)
             return
     return output_FUNC
@@ -55,6 +59,7 @@ def secure_from_exception_CALL(FUNC):
             FUNC(input_call)
         except:
             bot.send_message(input_call.from_user.id,MSGs.we_cant_do_it_now)
+            trafficController.drop_check(input_call.from_user.id)
             log_error("ERROR: " + FUNC.__name__)
             return
     return output_FUNC
@@ -65,6 +70,7 @@ def secure_from_exception_2input(FUNC):
             FUNC(input_userID,input_2nd)
         except:
             bot.send_message(input_userID,MSGs.we_cant_do_it_now)
+            trafficController.drop_check(input_userID)
             log_error("ERROR: " + FUNC.__name__)
             return
     return output_FUNC

@@ -22,6 +22,14 @@ def send_welcome(message):
         users.add_user(message)
         trafficController.drop_check(message.chat.id)
 
+@bot.message_handler(commands=['enter_user_pass'])
+@Error_Handle.secure_from_exception_MESSAGE
+def send_welcome(message):
+    check = trafficController.check_spam(message.chat.id)
+    if check == "OK":
+        process.get_userpass(message.chat.id)
+        trafficController.drop_check(message.chat.id)
+
 @bot.message_handler(commands=['status'])
 @Error_Handle.secure_from_exception_MESSAGE
 def send_welcome(message):
@@ -36,6 +44,14 @@ def send_welcome(message):
     check = trafficController.check_spam(message.chat.id)
     if check == "OK":
         process.renew_account_books(message.chat.id)
+        trafficController.drop_check(message.chat.id)
+
+@bot.message_handler(commands=['help'],regexp=None)
+@Error_Handle.secure_from_exception_MESSAGE
+def send_welcome(message):
+    check = trafficController.check_spam(message.chat.id)
+    if check == "OK":
+        process.send_help_MSG(message.chat.id)
         trafficController.drop_check(message.chat.id)
 
 @bot.message_handler(content_types=['text'])
@@ -83,7 +99,7 @@ def RENEW_THR():
             ALARM_TIME = ALARM_TIME.replace(year=ALARM_TIME.year,
                                             month=ALARM_TIME.month,
                                             day=ALARM_TIME.day,
-                                            hour=6, minute=20, second=50)
+                                            hour=10, minute=00, second=00)
             wait_time = (ALARM_TIME - now).total_seconds() % (24 * 60 * 60)
             print "wait_time: ", wait_time
             # print (ALARM_TIME - now).total_seconds()
