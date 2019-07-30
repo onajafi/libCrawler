@@ -10,7 +10,6 @@ import MSGs, users, Error_Handle
 from emoji import emojize
 
 
-#TODO add the reply_markup_button
 #TODO add the Terms&Conditions
 
 @bot.message_handler(commands=['start'])
