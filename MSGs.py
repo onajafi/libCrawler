@@ -12,6 +12,12 @@ none_markup = types.InlineKeyboardMarkup(row_width=1)
 enter_userpass_markup = types.InlineKeyboardMarkup(row_width=1)
 enter_userpass_markup.add(types.InlineKeyboardButton('ورود اطلاعات کاربری',callback_data='UserPass'))
 
+simple_MAIN_markup = types.ReplyKeyboardMarkup()
+simple_BTN_status = types.KeyboardButton(emojize('نمایش وضعیت امانات:bar_chart:', use_aliases=True))
+simple_BTN_renew = types.KeyboardButton(emojize('تمدید فوری امانات:alarm_clock:', use_aliases=True))
+simple_BTN_help = types.KeyboardButton(emojize('لیست دستورات:ledger:', use_aliases=True))
+simple_MAIN_markup.row(simple_BTN_renew,simple_BTN_help)
+simple_MAIN_markup.row(simple_BTN_status)
 
 #TODO fix the links in here:
 greetings = """سلام،

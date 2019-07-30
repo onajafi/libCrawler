@@ -39,7 +39,7 @@ def process_user_MSG(message):
         check_account_status(user_ID)
         if (user_book[user_ID]["state"] == "DONE"):#Check if the user pass is OK and then bring in the database
             dataBase._update_UserPass(user_ID,user_book[user_ID]["user"],user_book[user_ID]["pass"])
-            bot.send_message(user_ID, MSGs.your_good_to_go)
+            bot.send_message(user_ID, MSGs.your_good_to_go, reply_markup = MSGs.simple_MAIN_markup)
         else:
             user_book[user_ID]["user"] = None
             user_book[user_ID]["pass"] = None
@@ -48,7 +48,7 @@ def process_user_MSG(message):
         bot.forward_message(feedBack_target_chat,user_ID,message.message_id)
         bot.send_message(feedBack_target_chat,"The users ID is:")
         bot.send_message(feedBack_target_chat,str(user_ID))
-        bot.send_message(user_ID,MSGs.feedBack_sent)
+        bot.send_message(user_ID,MSGs.feedBack_sent, reply_markup = MSGs.simple_MAIN_markup)
         user_book[user_ID]["state"] = None
 
     elif(user_book[user_ID]["state"] == "admin_respond_get_chat_ID"):
@@ -134,7 +134,7 @@ def check_account_status(user_ID,quiet=False):
         main_MSG += temp_MSG
         main_MSG += "-------------\n"
 
-    bot.send_message(user_ID,main_MSG)
+    bot.send_message(user_ID,main_MSG, reply_markup = MSGs.simple_MAIN_markup)
 
     user_book[user_ID]["state"] = "DONE"
 
@@ -210,7 +210,7 @@ def renew_account_books(user_ID, quiet=False):
 
     if ((not quiet) or (win_count > 0)):
         bot.send_message(user_ID, "تعداد کتاب‌های تمدید شده: " + str(win_count))
-        bot.send_message(user_ID,main_MSG)
+        bot.send_message(user_ID,main_MSG, reply_markup = MSGs.simple_MAIN_markup)
 
     user_book[user_ID]["state"] = "DONE"
 
@@ -244,7 +244,7 @@ def get_userpass(user_ID):
     bot.send_message(user_ID, MSGs.give_user)
 
 def send_help_MSG(user_ID):
-    bot.send_message(user_ID, MSGs.help_message)
+    bot.send_message(user_ID, MSGs.help_message, reply_markup = MSGs.simple_MAIN_markup)
 
 def get_feedback(user_ID):
     user_book[user_ID]["state"] = "get_feedback"
@@ -252,7 +252,7 @@ def get_feedback(user_ID):
 
 def cancel_action(user_ID):
     user_book[user_ID]["state"] = None
-    bot.send_message(user_ID, MSGs.canceled_successfully)
+    bot.send_message(user_ID, MSGs.canceled_successfully, reply_markup = MSGs.simple_MAIN_markup)
 
 def respond_to_user_ID(user_ID):
     user_book[user_ID]["state"] = "admin_respond_get_chat_ID"

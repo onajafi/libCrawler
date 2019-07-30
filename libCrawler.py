@@ -11,6 +11,7 @@ from emoji import emojize
 
 
 #TODO add the reply_markup_button
+#TODO add the Terms&Conditions
 
 @bot.message_handler(commands=['start'])
 @Error_Handle.secure_from_exception_MESSAGE
@@ -29,6 +30,7 @@ def send_welcome(message):
         process.get_userpass(message.chat.id)
         trafficController.drop_check(message.chat.id)
 
+@bot.message_handler(regexp="^"+emojize('نمایش وضعیت امانات:bar_chart:', use_aliases=True)+"$")
 @bot.message_handler(commands=['status'])
 @Error_Handle.secure_from_exception_MESSAGE
 def send_welcome(message):
@@ -37,6 +39,7 @@ def send_welcome(message):
         process.check_account_status(message.chat.id)
         trafficController.drop_check(message.chat.id)
 
+@bot.message_handler(regexp="^"+emojize('تمدید فوری امانات:alarm_clock:', use_aliases=True)+"$")
 @bot.message_handler(commands=['renew'])
 @Error_Handle.secure_from_exception_MESSAGE
 def send_welcome(message):
