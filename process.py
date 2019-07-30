@@ -220,7 +220,7 @@ def renew_all_users():
     for user_ID in user_book.keys():
         try:
             if(user_book[user_ID]["user"] and user_book[user_ID]["pass"]):
-                renew_account_books(user_ID)# Add true for quiet here
+                renew_account_books(user_ID, quiet=True)
                 count_win+=1
             else:
                 count_loose+=1
