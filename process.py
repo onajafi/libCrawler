@@ -225,7 +225,10 @@ def renew_all_users():
             else:
                 count_loose+=1
         except:
-            bot.send_message(user_ID, MSGs.cant_auto_renew)
+            try:
+                bot.send_message(user_ID, MSGs.cant_auto_renew)
+            except:
+                pass# TODO Implement something to ignore the blockers
             Error_Handle.log_error("ERROR: " + "renew_all_users()::for")
             return
     bot.send_message(inits.feedBack_target_chat,
