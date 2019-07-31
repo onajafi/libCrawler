@@ -6,11 +6,11 @@ After a while of reserving books from our Universities library
  I found that the process of renewing your book reservation is pretty
 much annoying! When you enter the website it is hard to see a login button!
 
-![Website View](http://github/onajafi/libcrawler/_images/pic1_website.png)
+![Website View](https://raw.githubusercontent.com/onajafi/libCrawler/master/_images/pic1_website.png)
 
 But it's there some where...
 
-![Renew button](http://github/onajafi/libcrawler/_images/pic2_renew.png)
+![Renew button](https://raw.githubusercontent.com/onajafi/libCrawler/master/_images/pic2_renew.png)
 
 After discovering and clicking that button, you have to login and find the page where the books can be renewed 
 and click on the renewal button for each book (Nope, there is no "Renew All" button).
