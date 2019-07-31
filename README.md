@@ -6,13 +6,13 @@ After a while of reserving books from our Universities library
  I found that the process of renewing your book reservation is pretty
 much annoying! When you enter the website it is hard to see a login button!
 
-pic1_website view
+![Website View](http://github/onajafi/libcrawler/pic1_website)
 
 But it's there some where...
 
-pic2_website view
+![Renew button](http://github/onajafi/libcrawler/pic2_renew)
 
-After that, you have to login and find the page where the books can be renewed 
+After discovering and clicking that button, you have to login and find the page where the books can be renewed 
 and click on the renewal button for each book (Nope, there is no "Renew All" button).
 
 So I came up with the idea of writing this _Telegram Web Crawler_ bot.
